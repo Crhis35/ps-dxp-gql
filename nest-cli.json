@@ -63,6 +63,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/redis-cache-gql/tsconfig.lib.json"
       }
+    },
+    "redis-store": {
+      "type": "library",
+      "root": "libs/redis-store",
+      "entryFile": "index",
+      "sourceRoot": "libs/redis-store/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/redis-store/tsconfig.lib.json"
+      }
     }
   }
 }

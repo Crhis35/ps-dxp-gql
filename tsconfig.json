@@ -18,12 +18,30 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@lib/common": ["libs/common/src"],
-      "@lib/common/*": ["libs/common/src/*"],
-      "@lib/redis-pubsub": ["libs/redis-pubsub/src"],
-      "@lib/redis-pubsub/*": ["libs/redis-pubsub/src/*"],
-      "@lib/redis-cache-gql": ["libs/redis-cache-gql/src"],
-      "@lib/redis-cache-gql/*": ["libs/redis-cache-gql/src/*"]
+      "@lib/common": [
+        "libs/common/src"
+      ],
+      "@lib/common/*": [
+        "libs/common/src/*"
+      ],
+      "@lib/redis-pubsub": [
+        "libs/redis-pubsub/src"
+      ],
+      "@lib/redis-pubsub/*": [
+        "libs/redis-pubsub/src/*"
+      ],
+      "@lib/redis-cache-gql": [
+        "libs/redis-cache-gql/src"
+      ],
+      "@lib/redis-cache-gql/*": [
+        "libs/redis-cache-gql/src/*"
+      ],
+      "@lib/redis-store": [
+        "libs/redis-store/src"
+      ],
+      "@lib/redis-store/*": [
+        "libs/redis-store/src/*"
+      ]
     }
   }
 }

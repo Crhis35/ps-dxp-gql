@@ -32,6 +32,8 @@
     "@nestjs/terminus": "^9.1.4",
     "@webundsoehne/nestjs-util": "^6.0.6",
     "apollo-server-express": "^3.11.1",
+    "cache-manager": "^5.1.4",
+    "cache-manager-ioredis": "^2.1.0",
     "graphql": "^16.6.0",
     "graphql-redis-subscriptions": "^2.6.0",
     "helmet": "^6.0.1",
@@ -89,7 +91,8 @@
     "moduleNameMapper": {
       "^@lib/common(|/.*)$": "<rootDir>/libs/common/src/$1",
       "^@lib/redis-pubsub(|/.*)$": "<rootDir>/libs/redis-pubsub/src/$1",
-      "^@lib/redis-cache-gql(|/.*)$": "<rootDir>/libs/redis-cache-gql/src/$1"
+      "^@lib/redis-cache-gql(|/.*)$": "<rootDir>/libs/redis-cache-gql/src/$1",
+      "^@lib/redis-store(|/.*)$": "<rootDir>/libs/redis-store/src/$1"
     }
   }
 }
