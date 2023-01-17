@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  redis:
+    image: 'bitnami/redis:latest'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      - app-tier
+
+  account-subgraph:
+    container_name: order-subgraph-api
+    volumes:
+      - ./:/usr/src/app
+      - ./node_modules
+    build:
+      context: ./
+      dockerfile: ./apps/order-subgraph/Dockerfile
+      target: development
+    ports:
+      - '3001:3001'
+    networks:
+      - app-tier
+    command: yarn start:dev account-subgraph
+
+  gateway:
+    container_name: gateway-api
+    volumes:
+      - ./:/usr/src/app
+      - ./node_modules
+    build:
+      context: ./
+      dockerfile: ./apps/gateway/Dockerfile
+      target: development
+    command: yarn start:dev
+    ports:
+      - '4000:4000'
+    depends_on:
+      - delivery-subgraph
+    networks:
+      - app-tier
+    links:
+      - account-subgraph
+      - delivery-subgraph
+    environment:
+      - SERVICE_LIST=http://delivery-subgraph:3002/graphql,deliveries|http://user-subgraph:3001/graphql,users|http://order-subgraph:3003/graphql,orders|
+
+networks:
+  app-tier:
+    driver: bridge
