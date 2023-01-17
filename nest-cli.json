@@ -45,6 +45,24 @@
       "compilerOptions": {
         "tsConfigPath": "libs/common/tsconfig.lib.json"
       }
+    },
+    "redis-pubsub": {
+      "type": "library",
+      "root": "libs/redis-pubsub",
+      "entryFile": "index",
+      "sourceRoot": "libs/redis-pubsub/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/redis-pubsub/tsconfig.lib.json"
+      }
+    },
+    "redis-cache-gql": {
+      "type": "library",
+      "root": "libs/redis-cache-gql",
+      "entryFile": "index",
+      "sourceRoot": "libs/redis-cache-gql/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/redis-cache-gql/tsconfig.lib.json"
+      }
     }
   }
 }
