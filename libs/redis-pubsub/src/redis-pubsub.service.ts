@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import type { OnApplicationBootstrap } from '@nestjs/common';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { RedisPubSubModuleOptions } from './redis-pubsub.interface';
@@ -11,11 +11,12 @@ export class RedisPubSubService<
 > implements OnApplicationBootstrap
 {
   private pubSub: RedisPubSub;
-
+  private logger = new Logger();
   constructor(private options: RedisPubSubModuleOptions) {}
 
   public onApplicationBootstrap() {
     this.pubSub = new RedisPubSub(this.options.options);
+    this.logger.log(`Connected redis: ${this.options.options}`);
   }
 
   public publish<
@@ -55,6 +56,9 @@ export class RedisPubSubService<
     pattern: Pattern,
     extensions: string | string[] = [],
   ): AsyncIterator<any> {
+    console.log(
+      this.pubSub.asyncIterator(this.createTopic(pattern, extensions)),
+    );
     return this.pubSub.asyncIterator(this.createTopic(pattern, extensions));
   }
 

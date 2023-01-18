@@ -8,20 +8,20 @@ services:
     networks:
       - app-tier
 
-  account-subgraph:
-    container_name: order-subgraph-api
+  device-subgraph:
+    container_name: device-subgraph-api
     volumes:
       - ./:/usr/src/app
       - ./node_modules
     build:
       context: ./
-      dockerfile: ./apps/order-subgraph/Dockerfile
+      dockerfile: ./apps/device-subgraph/Dockerfile
       target: development
     ports:
       - '3001:3001'
     networks:
       - app-tier
-    command: yarn start:dev account-subgraph
+    command: yarn start:dev device-subgraph
 
   gateway:
     container_name: gateway-api
@@ -36,7 +36,7 @@ services:
     ports:
       - '4000:4000'
     depends_on:
-      - delivery-subgraph
+      - device-subgraph
     networks:
       - app-tier
     links:

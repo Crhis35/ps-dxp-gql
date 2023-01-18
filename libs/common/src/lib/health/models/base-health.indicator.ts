@@ -1,21 +1,23 @@
-import { HealthIndicator, HealthIndicatorResult } from "@nestjs/terminus";
-import { Gauge } from "prom-client";
-import { AbstractPromClientService } from "../../prometheus/models/prom-client.abstract";
-import { PrometheusHistogram } from "../../prometheus/prom-client.service";
-import { winstonLogger } from "../../logging/logging.model";
+import { HealthIndicator, HealthIndicatorResult } from '@nestjs/terminus';
+import { Gauge } from 'prom-client';
+import { winstonLogger } from '../../logging';
+import { AbstractPromClientService } from '../../prometheus/models/prom-client.abstract';
+import { PrometheusHistogram } from '../../prometheus/prometheus.service';
 
 // Design Pattern: Template Method
 // source: https://github.com/siimon/prom-client
 
-const TAG = "HealthCheck";
+const TAG = 'HealthCheck';
 
 export abstract class BaseHealthIndicator extends HealthIndicator {
   public abstract name: string;
   public callMetrics: any;
 
   protected abstract help: string;
-  protected abstract readonly promClientService: AbstractPromClientService | undefined;
-  protected readonly labelNames = ["status"];
+  protected abstract readonly promClientService:
+    | AbstractPromClientService
+    | undefined;
+  protected readonly labelNames = ['status'];
   protected readonly buckets = [1];
   protected stateIsConnected = false;
 
@@ -25,21 +27,22 @@ export abstract class BaseHealthIndicator extends HealthIndicator {
 
   protected registerMetrics(): void {
     if (this.promClientService) {
-      winstonLogger?.info("Register metrics histogram for: " + this.name, TAG);
+      winstonLogger?.info('Register metrics histogram for: ' + this.name, TAG);
       this.metricsRegistered = true;
-      const histogram: PrometheusHistogram = this.promClientService.registerMetrics(
-        this.name,
-        this.help,
-        this.labelNames,
-        this.buckets
-      );
+      const histogram: PrometheusHistogram =
+        this.promClientService.registerMetrics(
+          this.name,
+          this.help,
+          this.labelNames,
+          this.buckets,
+        );
       this.callMetrics = histogram.startTimer();
     }
   }
 
   protected registerGauges(): void {
     if (this.promClientService) {
-      winstonLogger?.info("Register metrics gauge for: " + this.name, TAG);
+      winstonLogger?.info('Register metrics gauge for: ' + this.name, TAG);
       this.gaugesRegistered = true;
       this.gauge = this.promClientService.registerGauge(this.name, this.help);
     }
@@ -52,7 +55,7 @@ export abstract class BaseHealthIndicator extends HealthIndicator {
   public updatePrometheusData(isConnected: boolean): void {
     if (this.stateIsConnected !== isConnected) {
       if (isConnected) {
-        winstonLogger?.info(this.name + " is available", TAG);
+        winstonLogger?.info(this.name + ' is available', TAG);
       }
 
       this.stateIsConnected = isConnected;

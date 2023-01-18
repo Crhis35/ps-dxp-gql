@@ -8,18 +8,21 @@ import { AppService } from './app.service';
 import { IntrospectAndCompose } from '@apollo/gateway';
 import * as Joi from 'joi';
 import { getServiceList } from './utils';
+import { CommonModule } from '@lib/common';
 
 @Module({
   imports: [
+    CommonModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath:
-        process.env.NODE_ENV === 'dev'
+        process.env.NODE_ENV === 'development'
           ? join(process.cwd(), 'apps/gateway/.env.development.local')
           : '.env.test',
       ignoreEnvFile: process.env.NODE_ENV === 'production',
       validationSchema: Joi.object({
         SERVICE_LIST: Joi.string().required(),
+        PORT: Joi.number(),
       }),
     }),
     GraphQLModule.forRoot<ApolloGatewayDriverConfig>({

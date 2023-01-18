@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Registry, collectDefaultMetrics, Histogram, Gauge } from 'prom-client';
+import { winstonLogger } from '../logging';
 import { AbstractPromClientService } from './models/prom-client.abstract';
-import { winstonLogger } from '../logging/logging.model';
 
 export type PrometheusHistogram = Histogram<string>;
 

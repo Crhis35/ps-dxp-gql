@@ -6,7 +6,7 @@ export abstract class AbstractPromClientService {
     name: string,
     help: string,
     labelNames: string[],
-    buckets: number[]
+    buckets: number[],
   ): Histogram<string>;
   public abstract registerGauge(name: string, help: string): Gauge<string>;
   public abstract removeSingleMetric(name: string): void;

@@ -8,7 +8,7 @@ import {
 import { HealthIndicator } from './interfaces/health-indicator.interface';
 import { AbstractPromClientService } from '../prometheus/models/prom-client.abstract';
 import { ReadinessIndicator } from './models/readiness.indicator';
-import { winstonLogger } from '../logging/logging.model';
+import { winstonLogger } from '../logging';
 
 @Injectable()
 export class HealthService {

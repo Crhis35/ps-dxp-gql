@@ -72,6 +72,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/redis-store/tsconfig.lib.json"
       }
+    },
+    "device-subgraph": {
+      "type": "application",
+      "root": "apps/device-subgraph",
+      "entryFile": "main",
+      "sourceRoot": "apps/device-subgraph/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/device-subgraph/tsconfig.app.json"
+      }
     }
   }
 }

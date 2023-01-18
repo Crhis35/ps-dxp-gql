@@ -1,0 +1,15 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Mutation {
+  testMutation: String!
+}
+
+type Query {
+  getHello: String!
+}
+
+type Subscription {
+  pendingOrders: String!
+}
