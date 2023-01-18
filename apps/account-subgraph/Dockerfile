@@ -1,3 +1,4 @@
+
 FROM node:lts-alpine AS development
 
 WORKDIR /usr/src/app
@@ -20,7 +21,7 @@ COPY --from=development /usr/src/app/node_modules ./node_modules
 
 COPY . .
 
-RUN yarn build gateway
+RUN yarn build account-subgraph
 
 ENV NODE_ENV production
 
@@ -35,9 +36,8 @@ USER node
 FROM node:lts-alpine AS production
 
 COPY --from=build /usr/src/app/node_modules ./node_modules
-COPY --from=build /usr/src/app/dist/apps/gateway ./dist
+COPY --from=build /usr/src/app/dist/apps/device-subgraph ./dist
 
 CMD [ "node", "dist/main.js" ]
 
-EXPOSE 4000
-
+EXPOSE 3001

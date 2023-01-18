@@ -56,9 +56,6 @@ export class RedisPubSubService<
     pattern: Pattern,
     extensions: string | string[] = [],
   ): AsyncIterator<any> {
-    console.log(
-      this.pubSub.asyncIterator(this.createTopic(pattern, extensions)),
-    );
     return this.pubSub.asyncIterator(this.createTopic(pattern, extensions));
   }
 

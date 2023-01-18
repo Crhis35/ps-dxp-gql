@@ -1,8 +1,15 @@
-import { Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
+import {
+  Mutation,
+  Query,
+  ResolveField,
+  Resolver,
+  Subscription,
+} from '@nestjs/graphql';
 import { NotificationsService } from './notifications.service';
 import { Notification } from './entities/notification.entity';
 import { InjectRedisPubSubService } from '@lib/redis-pubsub/inject/inject.decorator';
 import { RedisPubSubService } from '@lib/redis-pubsub';
+import { User } from './entities/user.entity';
 
 @Resolver(() => Notification)
 export class NotificationsResolver {

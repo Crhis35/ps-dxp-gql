@@ -2,17 +2,36 @@ version: '3.8'
 
 services:
   redis:
-    image: 'bitnami/redis:latest'
+    image: 'redis:latest'
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
     networks:
       - app-tier
+  account-subgraph:
+    container_name: account-subgraph-api
+    volumes:
+      - ./:/usr/src/app
+      - /node_modules
+    build:
+      context: ./
+      dockerfile: ./apps/account-subgraph/Dockerfile
+      target: development
+    ports:
+      - '3002:3002'
+    networks:
+      - app-tier
+    command: yarn start:dev account-subgraph
+    depends_on:
+      - redis
+    environment:
+      REDIS_URL: redis
+      PORT: 3002
 
   device-subgraph:
     container_name: device-subgraph-api
     volumes:
       - ./:/usr/src/app
-      - ./node_modules
+      - /node_modules
     build:
       context: ./
       dockerfile: ./apps/device-subgraph/Dockerfile
@@ -22,12 +41,16 @@ services:
     networks:
       - app-tier
     command: yarn start:dev device-subgraph
-
+    depends_on:
+      - redis
+    environment:
+      REDIS_URL: redis
+      PORT: 3001
   gateway:
     container_name: gateway-api
     volumes:
       - ./:/usr/src/app
-      - ./node_modules
+      - /node_modules
     build:
       context: ./
       dockerfile: ./apps/gateway/Dockerfile
@@ -40,10 +63,10 @@ services:
     networks:
       - app-tier
     links:
-      - account-subgraph
-      - delivery-subgraph
+      - device-subgraph
     environment:
-      - SERVICE_LIST=http://delivery-subgraph:3002/graphql,deliveries|http://user-subgraph:3001/graphql,users|http://order-subgraph:3003/graphql,orders|
+      - SERVICE_LIST=http://device-subgraph:3001/graphql-federated,devices|http://account-subgraph:3002/graphql-federated,accounts|
+      - PORT=4000
 
 networks:
   app-tier:

@@ -9,19 +9,19 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const enviroment = loadApiConfiguration();
-  initWinston(enviroment.apiTitle);
+  const environment = loadApiConfiguration();
+  initWinston(environment.apiTitle);
 
   const app = await NestFactory.create(AppModule, {
     logger: ['log', 'error', 'warn', 'debug', 'verbose'],
   });
   setNestApp(app);
-  app.setGlobalPrefix(enviroment.globalPrefix);
+  app.setGlobalPrefix(environment.globalPrefix);
 
-  await app.listen(enviroment.port);
+  await app.listen(environment.port);
   const url = await app.getUrl();
   winstonLogger?.info(
-    `?? Application is running on port: ${url}/${enviroment.globalPrefix}`,
+    `?? Application is running on port: ${url}/${environment.globalPrefix}`,
   );
   ApplicationReadiness.getInstance().isReady = true;
 }

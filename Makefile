@@ -2,7 +2,7 @@
 .PHONY: build
 # Build the containers
 build:
-	docker compose up --build -d
+	docker compose up --build
 # Clean the container image
 clean:
 	docker system prune

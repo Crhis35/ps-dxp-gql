@@ -4,7 +4,6 @@ FROM node:lts-alpine AS development
 WORKDIR /usr/src/app
 
 COPY package.json ./
-COPY yarn.lock ./
 
 RUN yarn
 
@@ -17,7 +16,6 @@ FROM node:lts-alpine AS build
 WORKDIR /usr/src/app
 
 COPY package.json ./
-COPY yarn.lock ./
 
 COPY --from=development /usr/src/app/node_modules ./node_modules
 
