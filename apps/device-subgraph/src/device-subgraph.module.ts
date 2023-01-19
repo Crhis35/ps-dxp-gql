@@ -12,11 +12,8 @@ import { DeviceSubgraphController } from './device-subgraph.controller';
 import { DeviceSubgraphService } from './device-subgraph.service';
 import * as Joi from 'joi';
 import { ConfigModule } from '@nestjs/config';
-import { NotificationsModule } from './notifications/notifications.module';
 import { RedisPubsubModule } from '@lib/redis-pubsub';
-import { Notification } from './notifications/entities/notification.entity';
-import { User } from './notifications/entities/user.entity';
-import { NotificationsResolver } from './notifications/notifications.resolver';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
   imports: [
@@ -36,16 +33,9 @@ import { NotificationsResolver } from './notifications/notifications.resolver';
     RedisPubsubModule.forRoot({}),
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
-      autoSchemaFile: join(
-        process.cwd(),
-        'apps/device-subgraph/schema-fed.gql',
-      ),
+      typePaths: ['./**/*.{graphql,graphql.federation}'],
       cors: true,
       path: '/graphql-federated',
-      buildSchemaOptions: {
-        orphanedTypes: [Notification],
-      },
-      include: [NotificationsResolver],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -53,9 +43,11 @@ import { NotificationsResolver } from './notifications/notifications.resolver';
         'graphql-ws': true,
         'subscriptions-transport-ws': true,
       },
-      autoSchemaFile: join(process.cwd(), 'apps/device-subgraph/schema.gql'),
+      typePaths: ['./**/*.{graphql,graphql.normal}'],
+      definitions: {
+        path: join(process.cwd(), 'apps/device-subgraph/src/graphql/schema.ts'),
+      },
       path: '/graphql',
-      include: [NotificationsResolver],
     }),
     NotificationsModule,
   ],

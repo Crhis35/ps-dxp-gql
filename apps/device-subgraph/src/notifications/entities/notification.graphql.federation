@@ -1,0 +1,5 @@
+type Notification @key(fields: "id")  {
+  id: ID!
+
+  actor: User!
+}

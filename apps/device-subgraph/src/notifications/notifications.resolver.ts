@@ -1,36 +1,27 @@
-import {
-  Mutation,
-  Query,
-  ResolveField,
-  Resolver,
-  Subscription,
-} from '@nestjs/graphql';
-import { NotificationsService } from './notifications.service';
-import { Notification } from './entities/notification.entity';
-import { InjectRedisPubSubService } from '@lib/redis-pubsub/inject/inject.decorator';
 import { RedisPubSubService } from '@lib/redis-pubsub';
-import { User } from './entities/user.entity';
+import { InjectRedisPubSubService } from '@lib/redis-pubsub/inject/inject.decorator';
+import { Mutation, Resolver, Subscription } from '@nestjs/graphql';
+import { NotificationsService } from './notifications.service';
 
-@Resolver(() => Notification)
+@Resolver('Notification')
 export class NotificationsResolver {
   constructor(
     private readonly notificationsService: NotificationsService,
     @InjectRedisPubSubService() private readonly pubSub: RedisPubSubService,
   ) {}
 
-  @Query(() => String)
-  getHello(): string {
-    return 'getHello';
+  @Mutation('detectedDevice')
+  async detectedDevice() {
+    this.pubSub.publish('CREATED', ['Notification'], {
+      onCreateNotification: { value: 'Elegantly' },
+    });
+    return 'Success!';
   }
 
-  @Mutation(() => String)
-  testMutation() {
-    return this.notificationsService.testMutation();
-  }
-  @Subscription(() => String, {
-    resolve: ({ pendingOrders: { value } }) => value,
+  @Subscription('onCreateNotification', {
+    resolve: ({ onCreateNotification: { value } }) => value,
   })
-  pendingOrders() {
+  onCreateNotification() {
     return this.pubSub.iterator('CREATED', ['Notification']);
   }
 }
