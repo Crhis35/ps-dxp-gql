@@ -30,7 +30,11 @@ import { NotificationsModule } from './notifications/notifications.module';
         REDIS_URL: Joi.string(),
       }),
     }),
-    RedisPubsubModule.forRoot({}),
+    RedisPubsubModule.forRoot({
+      options: {
+        connection: process.env.REDIS_URL,
+      },
+    }),
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
       typePaths: ['./**/*.{graphql,graphql.federation}'],

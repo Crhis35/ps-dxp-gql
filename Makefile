@@ -4,8 +4,9 @@
 build:
 	docker compose up --build
 # Clean the container image
+# docker system prune
 clean:
-	docker system prune
+	docker compose rm
 # Run the container image
 down:
 	docker compose down

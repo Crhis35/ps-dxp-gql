@@ -1,12 +1,55 @@
 version: '3.8'
 
 services:
+  db:
+    image: postgres
+    container_name: local_pgdb
+    restart: always
+    ports:
+      - '54320:5432'
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: admin
+    networks:
+      - db-tier
+    # volumes:
+    #   - local_pgdata:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4_container
+    restart: always
+    ports:
+      - '5050:5050'
+    networks:
+      - db-tier
+    environment:
+      PGADMIN_DEFAULT_EMAIL: test@test.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    # volumes:
+    #   - pgadmin-data:/var/lib/pgadmin
   redis:
+    container_name: redisdb
     image: 'redis:latest'
+    ports:
+      - '6379:6379'
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
     networks:
       - app-tier
+  redis-commander:
+    container_name: redis-commander
+    hostname: redis-commander
+    image: rediscommander/redis-commander:latest
+    restart: always
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - '8081:8081'
+    networks:
+      - app-tier
+    depends_on:
+      - redis
   account-subgraph:
     container_name: account-subgraph-api
     volumes:
@@ -20,11 +63,13 @@ services:
       - '3002:3002'
     networks:
       - app-tier
+      - db-tier
     command: yarn start:dev account-subgraph
     depends_on:
       - redis
+      - db
     environment:
-      REDIS_URL: redis
+      REDIS_URL: redis://redis:6379
       PORT: 3002
 
   device-subgraph:
@@ -44,7 +89,7 @@ services:
     depends_on:
       - redis
     environment:
-      REDIS_URL: redis
+      REDIS_URL: redis://redis:6379
       PORT: 3001
   gateway:
     container_name: gateway-api
@@ -60,14 +105,18 @@ services:
       - '4000:4000'
     depends_on:
       - device-subgraph
+      - account-subgraph
     networks:
       - app-tier
     links:
       - device-subgraph
+      - account-subgraph
     environment:
       - SERVICE_LIST=http://device-subgraph:3001/graphql-federated,devices|http://account-subgraph:3002/graphql-federated,accounts|
       - PORT=4000
 
 networks:
   app-tier:
+    driver: bridge
+  db-tier:
     driver: bridge

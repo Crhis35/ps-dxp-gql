@@ -22,13 +22,13 @@ directive @inaccessible on FIELD_DEFINITION | OBJECT | INTERFACE | UNION | ARGUM
 
 directive @override(from: String!) on FIELD_DEFINITION
 
-type user {
+type User {
   id: ID!
   name: String!
 }
 
 type Query {
-  getUser: user
+  getUser: User
 }
 
 scalar link__Import
