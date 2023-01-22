@@ -8,15 +8,22 @@ import {
 import { NestFactory } from '@nestjs/core';
 import { AccountSubgraphModule } from './account-subgraph.module';
 import { MikroORM } from '@mikro-orm/core';
+import {
+  FastifyAdapter,
+  NestFastifyApplication,
+} from '@nestjs/platform-fastify';
 
 async function bootstrap() {
   const environment = loadApiConfiguration();
   initWinston(environment.apiTitle);
 
-  const app = await NestFactory.create(AccountSubgraphModule, {
-    logger: ['log', 'error', 'warn', 'debug', 'verbose'],
-  });
-
+  const app = await NestFactory.create<NestFastifyApplication>(
+    AccountSubgraphModule,
+    new FastifyAdapter(),
+    {
+      logger: ['log', 'error', 'warn', 'debug', 'verbose'],
+    },
+  );
   setNestApp(app);
   if (environment.nodeEnv !== 'production') {
     await app.get(MikroORM).getSchemaGenerator().ensureDatabase();

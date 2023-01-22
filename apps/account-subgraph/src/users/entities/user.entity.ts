@@ -1,5 +1,5 @@
 import { CoreEntity } from '@lib/mikro-orm-pg';
-import { Directive, Field, ID, ObjectType } from '@nestjs/graphql';
+import { Directive, Field, ObjectType } from '@nestjs/graphql';
 import { Entity, Property } from '@mikro-orm/core';
 
 @ObjectType()

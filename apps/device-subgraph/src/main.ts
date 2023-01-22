@@ -7,14 +7,24 @@ import {
 } from '@lib/common';
 import { NestFactory } from '@nestjs/core';
 import { DeviceSubgraphModule } from './device-subgraph.module';
+import {
+  FastifyAdapter,
+  NestFastifyApplication,
+} from '@nestjs/platform-fastify';
 
 async function bootstrap() {
   const environment = loadApiConfiguration();
   initWinston(environment.apiTitle);
 
-  const app = await NestFactory.create(DeviceSubgraphModule, {
-    logger: ['log', 'error', 'warn', 'debug', 'verbose'],
-  });
+  const app = await NestFactory.create<NestFastifyApplication>(
+    DeviceSubgraphModule,
+    new FastifyAdapter({
+      logger: true,
+    }),
+    {
+      logger: ['log', 'error', 'warn', 'debug', 'verbose'],
+    },
+  );
   setNestApp(app);
   app.setGlobalPrefix(environment.globalPrefix);
 

@@ -6,15 +6,23 @@ import {
   winstonLogger,
 } from '@lib/common';
 import { NestFactory } from '@nestjs/core';
+import {
+  FastifyAdapter,
+  NestFastifyApplication,
+} from '@nestjs/platform-fastify';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const environment = loadApiConfiguration();
   initWinston(environment.apiTitle);
 
-  const app = await NestFactory.create(AppModule, {
-    logger: ['log', 'error', 'warn', 'debug', 'verbose'],
-  });
+  const app = await NestFactory.create<NestFastifyApplication>(
+    AppModule,
+    new FastifyAdapter(),
+    {
+      logger: ['log', 'error', 'warn', 'debug', 'verbose'],
+    },
+  );
   setNestApp(app);
   app.setGlobalPrefix(environment.globalPrefix);
 
@@ -25,9 +33,9 @@ async function bootstrap() {
   );
   ApplicationReadiness.getInstance().isReady = true;
 }
-
-(async (): Promise<void> => {
-  await bootstrap();
-})().catch((error: Error) => {
-  winstonLogger?.error(`Nest application error: ${error.message}`);
-});
+bootstrap();
+// (async (): Promise<void> => {
+//   await bootstrap();
+// })().catch((error: Error) => {
+//   winstonLogger?.error(`Nest application error: ${error.message}`);
+// });

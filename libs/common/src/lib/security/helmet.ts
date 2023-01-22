@@ -66,7 +66,11 @@ export const secureApplication = (app: INestApplication) => {
         const { url, method } = req;
 
         // exclude graphql playground
-        if (method === 'GET' && url === '/graphql') return next();
+        if (
+          (method === 'GET' && url === '/graphql') ||
+          (method === 'GET' && url === '/graphiql')
+        )
+          return next();
 
         const { host } = new URL('');
 

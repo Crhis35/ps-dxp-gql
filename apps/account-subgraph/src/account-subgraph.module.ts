@@ -2,12 +2,8 @@ import * as Joi from 'joi';
 
 import { join } from 'path';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { Module } from '@nestjs/common';
+import { HttpException, Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import {
-  ApolloFederationDriver,
-  ApolloFederationDriverConfig,
-} from '@nestjs/apollo';
 
 import { AccountSubgraphController } from './account-subgraph.controller';
 import { AccountSubgraphService } from './account-subgraph.service';
@@ -18,6 +14,12 @@ import { ConfigModule } from '@nestjs/config';
 import { User } from './users/entities/user.entity';
 import config from './orm.config';
 import { MikroCommonModule } from '@lib/mikro-orm-pg';
+import {
+  MercuriusFederationDriver,
+  MercuriusFederationDriverConfig,
+} from '@nestjs/mercurius';
+import { UsersResolver } from './users/users.resolver';
+import { GraphQLError } from 'graphql';
 
 @Module({
   imports: [
@@ -35,13 +37,25 @@ import { MikroCommonModule } from '@lib/mikro-orm-pg';
       }),
     }),
     MikroOrmModule.forRoot(config),
-    GraphQLModule.forRoot<ApolloFederationDriverConfig>({
-      driver: ApolloFederationDriver,
-      autoSchemaFile: join(process.cwd(), 'apps/account-subgraph/schema.gql'),
-      cors: true,
-      path: '/graphql-federated',
-      buildSchemaOptions: {
-        orphanedTypes: [User],
+    GraphQLModule.forRoot<MercuriusFederationDriverConfig>({
+      driver: MercuriusFederationDriver,
+      autoSchemaFile: join(
+        process.cwd(),
+        'apps/account-subgraph/src/schema.gql',
+      ),
+      graphiql: true,
+      ide: true,
+      federationMetadata: true,
+      routes: true,
+      errorFormatter: (error) => {
+        const org = error.errors[0].originalError as HttpException;
+        return {
+          statusCode: org.getStatus(),
+          response: {
+            errors: [org.getResponse() as GraphQLError],
+            data: null,
+          },
+        };
       },
     }),
     MikroCommonModule,

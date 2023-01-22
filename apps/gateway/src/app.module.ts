@@ -1,14 +1,16 @@
-import { ApolloGatewayDriver, ApolloGatewayDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { IntrospectAndCompose } from '@apollo/gateway';
 import * as Joi from 'joi';
 import { getServiceList } from './utils';
 import { CommonModule } from '@lib/common';
+import {
+  MercuriusGatewayDriver,
+  MercuriusGatewayDriverConfig,
+} from '@nestjs/mercurius';
 
 @Module({
   imports: [
@@ -25,15 +27,15 @@ import { CommonModule } from '@lib/common';
         PORT: Joi.number(),
       }),
     }),
-    GraphQLModule.forRoot<ApolloGatewayDriverConfig>({
-      driver: ApolloGatewayDriver,
-      server: {
-        cors: true,
-      },
+    GraphQLModule.forRoot<MercuriusGatewayDriverConfig>({
+      driver: MercuriusGatewayDriver,
+      graphiql: true,
+      autoSchemaFile: join(
+        process.cwd(),
+        'apps/account-subgraph/src/schema.gql',
+      ),
       gateway: {
-        supergraphSdl: new IntrospectAndCompose({
-          subgraphs: getServiceList(),
-        }),
+        services: getServiceList(),
       },
     }),
   ],

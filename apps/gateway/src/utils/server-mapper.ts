@@ -1,8 +1,4 @@
-import { ServiceEndpointDefinition } from '@apollo/gateway';
-
-const formatService = (
-  serviceIdentifier: string,
-): ServiceEndpointDefinition => {
+const formatService = (serviceIdentifier: string) => {
   const [url, name] = serviceIdentifier.split(',');
   return {
     url,
