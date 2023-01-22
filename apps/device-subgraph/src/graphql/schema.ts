@@ -8,24 +8,24 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export interface Notification {
+export class Notification {
     id: string;
     actor: User;
 }
 
-export interface ISubscription {
-    onCreateNotification(): Nullable<string> | Promise<Nullable<string>>;
+export abstract class ISubscription {
+    abstract onCreateNotification(): Nullable<string> | Promise<Nullable<string>>;
 }
 
-export interface IQuery {
-    service(): Nullable<string> | Promise<Nullable<string>>;
+export abstract class IQuery {
+    abstract service(): Nullable<string> | Promise<Nullable<string>>;
 }
 
-export interface IMutation {
-    detectedDevice(): Nullable<string> | Promise<Nullable<string>>;
+export abstract class IMutation {
+    abstract detectedDevice(): Nullable<string> | Promise<Nullable<string>>;
 }
 
-export interface User {
+export class User {
     id: string;
     notifications?: Nullable<Nullable<Notification>[]>;
 }

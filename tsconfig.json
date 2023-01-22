@@ -41,6 +41,12 @@
       ],
       "@lib/redis-store/*": [
         "libs/redis-store/src/*"
+      ],
+      "@lib/mikro-orm-pg": [
+        "libs/mikro-orm-pg/src"
+      ],
+      "@lib/mikro-orm-pg/*": [
+        "libs/mikro-orm-pg/src/*"
       ]
     }
   }

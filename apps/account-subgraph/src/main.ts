@@ -7,6 +7,7 @@ import {
 } from '@lib/common';
 import { NestFactory } from '@nestjs/core';
 import { AccountSubgraphModule } from './account-subgraph.module';
+import { MikroORM } from '@mikro-orm/core';
 
 async function bootstrap() {
   const environment = loadApiConfiguration();
@@ -17,6 +18,13 @@ async function bootstrap() {
   });
 
   setNestApp(app);
+  if (environment.nodeEnv !== 'production') {
+    await app.get(MikroORM).getSchemaGenerator().ensureDatabase();
+    await app.get(MikroORM).getSchemaGenerator().updateSchema({
+      wrap: false,
+    });
+  }
+
   app.setGlobalPrefix(environment.globalPrefix);
 
   await app.listen(environment.port);

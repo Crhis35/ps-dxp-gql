@@ -81,6 +81,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/device-subgraph/tsconfig.app.json"
       }
+    },
+    "mikro-orm-pg": {
+      "type": "library",
+      "root": "libs/mikro-orm-pg",
+      "entryFile": "index",
+      "sourceRoot": "libs/mikro-orm-pg/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/mikro-orm-pg/tsconfig.lib.json"
+      }
     }
   }
 }

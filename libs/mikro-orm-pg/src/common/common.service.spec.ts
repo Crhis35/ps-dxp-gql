@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { RedisCacheGqlService } from './redis-cache-gql.service';
+import { CommonService } from './common.service';
 
-describe('RedisCacheGqlService', () => {
-  let service: RedisCacheGqlService;
+describe('CommonService', () => {
+  let service: CommonService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [RedisCacheGqlService],
+      providers: [CommonService],
     }).compile();
 
-    service = module.get<RedisCacheGqlService>(RedisCacheGqlService);
+    service = module.get<CommonService>(CommonService);
   });
 
   it('should be defined', () => {

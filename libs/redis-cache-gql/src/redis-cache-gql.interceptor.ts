@@ -29,7 +29,6 @@ export class RedisCacheGQLInterceptor implements NestInterceptor {
       CACHE_TTL_METADATA,
       context.getHandler(),
     );
-
     const stringifyedArgs = JSON.stringify(args);
 
     const key = this.createTopic(field.fieldName, stringifyedArgs);

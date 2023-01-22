@@ -14,6 +14,7 @@ import * as Joi from 'joi';
 import { ConfigModule } from '@nestjs/config';
 import { RedisPubsubModule } from '@lib/redis-pubsub';
 import { NotificationsModule } from './notifications/notifications.module';
+import { RedisCacheGqlModule } from '@lib/redis-cache-gql';
 
 @Module({
   imports: [
@@ -35,6 +36,12 @@ import { NotificationsModule } from './notifications/notifications.module';
         connection: process.env.REDIS_URL,
       },
     }),
+    RedisCacheGqlModule.forRoot({
+      global: true,
+      options: {
+        host: 'localhost',
+      } as any,
+    }),
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
       typePaths: ['./**/*.{graphql,graphql.federation}'],
@@ -50,6 +57,7 @@ import { NotificationsModule } from './notifications/notifications.module';
       typePaths: ['./**/*.{graphql,graphql.normal}'],
       definitions: {
         path: join(process.cwd(), 'apps/device-subgraph/src/graphql/schema.ts'),
+        outputAs: 'class',
       },
       path: '/graphql',
     }),

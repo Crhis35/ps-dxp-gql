@@ -4,14 +4,21 @@ import type {
   CacheStore,
 } from '@nestjs/common';
 import { CacheModule, CACHE_MANAGER, Global, Module } from '@nestjs/common';
-import { RedisCacheManagerOptions } from './redis-cache-gql.interface';
-import { RedisCacheGqlService } from './redis-cache-gql.service';
+import type { RedisCacheManagerOptions } from './redis-cache-gql.interface';
 import { ConfigService } from '@webundsoehne/nestjs-util/dist/provider/config/config.service';
 import * as redisStore from 'cache-manager-ioredis';
+import { RedisCacheGQLInterceptor } from './redis-cache-gql.interceptor';
 
+@Global()
 @Module({
-  providers: [RedisCacheGqlService],
-  exports: [RedisCacheGqlService],
+  providers: [RedisCacheGQLInterceptor],
+  imports: [
+    CacheModule.register({
+      ...ConfigService.get<CacheModuleOptions>('redisCacheManager'),
+      store: redisStore as unknown as CacheStore,
+    }),
+  ],
+  exports: [CacheModule],
 })
 export class RedisCacheGqlModule {
   public static forRoot(options: RedisCacheManagerOptions): DynamicModule {

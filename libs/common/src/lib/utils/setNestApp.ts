@@ -12,11 +12,7 @@ export function setNestApp<T extends INestApplication>(app: T): void {
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
-      transformOptions: { enableImplicitConversion: true },
-      whitelist: true,
-      validationError: {
-        value: true,
-      },
+      forbidUnknownValues: false,
       exceptionFactory: (validationErrors: ValidationError[] = []) => {
         return new BadRequestException(
           validationErrors.map((e) => new CustomValidationError(e)),

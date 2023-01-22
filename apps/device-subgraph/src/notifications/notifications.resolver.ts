@@ -1,13 +1,23 @@
-import { RedisPubSubService } from '@lib/redis-pubsub';
-import { InjectRedisPubSubService } from '@lib/redis-pubsub/inject/inject.decorator';
-import { Mutation, Resolver, Subscription } from '@nestjs/graphql';
+import {
+  InjectRedisCacheManager,
+  RedisCacheGQLInterceptor,
+  RedisCacheManagerProvider,
+} from '@lib/redis-cache-gql';
+import {
+  InjectRedisPubSubService,
+  RedisPubSubService,
+} from '@lib/redis-pubsub';
+import { Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { NotificationsService } from './notifications.service';
 
 @Resolver('Notification')
 export class NotificationsResolver {
   constructor(
     private readonly notificationsService: NotificationsService,
-    @InjectRedisPubSubService() private readonly pubSub: RedisPubSubService,
+    @InjectRedisPubSubService()
+    private readonly pubSub: RedisPubSubService,
+    @InjectRedisCacheManager()
+    private readonly cache: RedisCacheManagerProvider,
   ) {}
 
   @Mutation('detectedDevice')
@@ -16,6 +26,13 @@ export class NotificationsResolver {
       onCreateNotification: { value: 'Elegantly' },
     });
     return 'Success!';
+  }
+
+  @Query('service')
+  async service() {
+    console.log(this.cache);
+    console.log(await this.cache.get('data'));
+    return 'NotificationsResolver';
   }
 
   @Subscription('onCreateNotification', {

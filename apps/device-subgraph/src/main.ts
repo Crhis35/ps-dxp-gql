@@ -15,7 +15,6 @@ async function bootstrap() {
   const app = await NestFactory.create(DeviceSubgraphModule, {
     logger: ['log', 'error', 'warn', 'debug', 'verbose'],
   });
-
   setNestApp(app);
   app.setGlobalPrefix(environment.globalPrefix);
 
@@ -26,9 +25,9 @@ async function bootstrap() {
   );
   ApplicationReadiness.getInstance().isReady = true;
 }
-bootstrap();
-// (async (): Promise<void> => {
-//   await bootstrap();
-// })().catch((error: Error) => {
-//   winstonLogger?.error(`Nest application error: ${error.message}`);
-// });
+
+(async (): Promise<void> => {
+  await bootstrap();
+})().catch((error: Error) => {
+  winstonLogger?.error(`Nest application error: ${error.message}`);
+});

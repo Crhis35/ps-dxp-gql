@@ -22,13 +22,75 @@ directive @inaccessible on FIELD_DEFINITION | OBJECT | INTERFACE | UNION | ARGUM
 
 directive @override(from: String!) on FIELD_DEFINITION
 
+type RelayPageInfo {
+  startCursor: String!
+  endCursor: String!
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+}
+
 type User {
   id: ID!
+  slug: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   name: String!
 }
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type CreateUserOutput {
+  error: String
+  ok: Boolean!
+  item: User
+}
+
+type UserRelayEdge {
+  cursor: String!
+  node: User!
+}
+
+type RelayPaginatedUserResponse {
+  previousCount: Int
+  currentCount: Int
+  edges: [UserRelayEdge!]
+  pageInfo: RelayPageInfo
+  error: String
+  ok: Boolean!
+}
+
 type Query {
-  getUser: User
+  listAllUsers(input: SearchInput!): RelayPaginatedUserResponse
+}
+
+input SearchInput {
+  after: String
+  first: Int! = 10
+  order: QueryOrder! = DESC
+  cursor: QueryCursor! = DATE
+  search: String
+}
+
+enum QueryOrder {
+  ASC
+  DESC
+}
+
+enum QueryCursor {
+  DATE
+  ALPHA
+}
+
+type Mutation {
+  createUser(input: CreateUserInput!): CreateUserOutput!
+}
+
+input CreateUserInput {
+  name: String!
+  slug: String!
 }
 
 scalar link__Import
