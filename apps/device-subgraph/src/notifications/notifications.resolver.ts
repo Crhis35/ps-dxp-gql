@@ -1,6 +1,5 @@
 import {
   InjectRedisCacheManager,
-  RedisCacheGQLInterceptor,
   RedisCacheManagerProvider,
 } from '@lib/redis-cache-gql';
 import {
@@ -20,25 +19,24 @@ export class NotificationsResolver {
     private readonly cache: RedisCacheManagerProvider,
   ) {}
 
-  @Mutation('detectedDevice')
+  @Mutation(() => String)
   async detectedDevice() {
+    console.log(this.cache);
     this.pubSub.publish('CREATED', ['Notification'], {
       onCreateNotification: { value: 'Elegantly' },
     });
     return 'Success!';
   }
 
-  @Query('service')
+  @Query(() => String)
   async service() {
-    console.log(this.cache);
-    console.log(await this.cache.get('data'));
     return 'NotificationsResolver';
   }
 
-  @Subscription('onCreateNotification', {
+  @Subscription(() => String, {
     resolve: ({ onCreateNotification: { value } }) => value,
   })
   onCreateNotification() {
-    return this.pubSub.iterator('CREATED', ['Notification']);
+    return this.notificationsService.onCreateNotification();
   }
 }

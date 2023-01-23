@@ -18,7 +18,9 @@ async function bootstrap() {
 
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter(),
+    new FastifyAdapter({
+      logger: true,
+    }),
     {
       logger: ['log', 'error', 'warn', 'debug', 'verbose'],
     },
@@ -26,16 +28,15 @@ async function bootstrap() {
   setNestApp(app);
   app.setGlobalPrefix(environment.globalPrefix);
 
-  await app.listen(environment.port);
+  await app.listen(environment.port, '0.0.0.0');
   const url = await app.getUrl();
   winstonLogger?.info(
     `?? Application is running on port: ${url}/${environment.globalPrefix}`,
   );
   ApplicationReadiness.getInstance().isReady = true;
 }
-bootstrap();
-// (async (): Promise<void> => {
-//   await bootstrap();
-// })().catch((error: Error) => {
-//   winstonLogger?.error(`Nest application error: ${error.message}`);
-// });
+(async (): Promise<void> => {
+  await bootstrap();
+})().catch((error: Error) => {
+  winstonLogger?.error(`Nest application error: ${error.message}`);
+});

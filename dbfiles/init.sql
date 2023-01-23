@@ -1,0 +1,3 @@
+CREATE USER admin WITH SUPERUSER ENCRYPTED PASSWORD 'admin';
+CREATE DATABASE "ps-dxp-development";
+GRANT ALL PRIVILEGES ON DATABASE "ps-dxp-development" TO admin;

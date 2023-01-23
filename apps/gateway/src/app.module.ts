@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { HttpException, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
@@ -11,6 +11,7 @@ import {
   MercuriusGatewayDriver,
   MercuriusGatewayDriverConfig,
 } from '@nestjs/mercurius';
+import { GraphQLError } from 'graphql';
 
 @Module({
   imports: [
@@ -30,12 +31,23 @@ import {
     GraphQLModule.forRoot<MercuriusGatewayDriverConfig>({
       driver: MercuriusGatewayDriver,
       graphiql: true,
-      autoSchemaFile: join(
-        process.cwd(),
-        'apps/account-subgraph/src/schema.gql',
-      ),
+      autoSchemaFile: join(process.cwd(), 'apps/gateway/src/schema.gql'),
+      federationMetadata: true,
       gateway: {
         services: getServiceList(),
+      },
+      subscription: {
+        fullWsTransport: true,
+      },
+      errorFormatter: (error) => {
+        const org = error.errors[0].originalError as HttpException;
+        return {
+          statusCode: org?.getStatus(),
+          response: {
+            errors: [org?.getResponse() as GraphQLError],
+            data: null,
+          },
+        };
       },
     }),
   ],

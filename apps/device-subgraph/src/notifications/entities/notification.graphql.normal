@@ -1,8 +1,0 @@
-type Notification {
-  id: ID!
-  actor: User!
-}
-
-type Subscription {
-  onCreateNotification: String
-}

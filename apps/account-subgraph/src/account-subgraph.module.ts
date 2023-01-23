@@ -11,14 +11,12 @@ import { UsersModule } from './users/users.module';
 import { CommonModule } from '@lib/common';
 import { ConfigModule } from '@nestjs/config';
 
-import { User } from './users/entities/user.entity';
 import config from './orm.config';
 import { MikroCommonModule } from '@lib/mikro-orm-pg';
 import {
   MercuriusFederationDriver,
   MercuriusFederationDriverConfig,
 } from '@nestjs/mercurius';
-import { UsersResolver } from './users/users.resolver';
 import { GraphQLError } from 'graphql';
 
 @Module({
@@ -33,7 +31,8 @@ import { GraphQLError } from 'graphql';
       ignoreEnvFile: process.env.NODE_ENV === 'production',
       validationSchema: Joi.object({
         PORT: Joi.number(),
-        REDIS_URL: Joi.string(),
+        REDIS_URL: Joi.string().required(),
+        DATABASE_URL: Joi.string().required(),
       }),
     }),
     MikroOrmModule.forRoot(config),

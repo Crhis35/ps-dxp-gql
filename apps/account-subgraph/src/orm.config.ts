@@ -2,7 +2,7 @@ import { LoadStrategy, Options } from '@mikro-orm/core';
 import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
 import { User } from './users/entities/user.entity';
 
-const config: Options =
+/*const config: Options =
   process.env.NODE_ENV !== 'production'
     ? {
         debug: true,
@@ -15,11 +15,23 @@ const config: Options =
       }
     : {
         type: 'postgresql',
-        highlighter: new SqlHighlighter(),
+        highlighter: new SqlHighlighter()
         clientUrl: process.env.DATABASE_URL,
         entities: [User],
         loadStrategy: LoadStrategy.JOINED,
         allowGlobalContext: true,
       };
+
+*/
+const config: Options = {
+  type: 'postgresql',
+  highlighter: new SqlHighlighter(),
+  clientUrl: process.env.DATABASE_URL,
+  entities: [User],
+  loadStrategy: LoadStrategy.JOINED,
+  allowGlobalContext: true,
+  dbName: `ps-dxp-${process.env.NODE_ENV}`,
+  debug: process.env.NODE_ENV === 'development',
+};
 
 export default config;

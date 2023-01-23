@@ -34,14 +34,13 @@ async function bootstrap() {
 
   app.setGlobalPrefix(environment.globalPrefix);
 
-  await app.listen(environment.port);
+  await app.listen(environment.port, '0.0.0.0');
   const url = await app.getUrl();
   winstonLogger?.info(
     `?? Application is running on port: ${url}/${environment.globalPrefix}`,
   );
   ApplicationReadiness.getInstance().isReady = true;
 }
-
 (async (): Promise<void> => {
   await bootstrap();
 })().catch((error: Error) => {

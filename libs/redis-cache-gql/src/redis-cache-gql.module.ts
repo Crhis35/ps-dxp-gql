@@ -15,7 +15,7 @@ import { RedisCacheGQLInterceptor } from './redis-cache-gql.interceptor';
   imports: [
     CacheModule.register({
       ...ConfigService.get<CacheModuleOptions>('redisCacheManager'),
-      store: redisStore as unknown as CacheStore,
+      // store: redisStore as unknown as CacheStore,
     }),
   ],
   exports: [CacheModule],
@@ -33,7 +33,7 @@ export class RedisCacheGqlModule {
               ...(options?.options ?? {
                 ...ConfigService.get<CacheModuleOptions>('redisCacheManager'),
               }),
-              store: redisStore as unknown as CacheStore,
+              //              store: redisStore as unknown as CacheStore,
             }),
         },
       ],
