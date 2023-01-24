@@ -37,7 +37,7 @@ async function bootstrap() {
   await app.listen(environment.port, '0.0.0.0');
   const url = await app.getUrl();
   winstonLogger?.info(
-    `?? Application is running on port: ${url}/${environment.globalPrefix}`,
+    `🚀 Application is running on port: ${url}/${environment.globalPrefix}`,
   );
   ApplicationReadiness.getInstance().isReady = true;
 }

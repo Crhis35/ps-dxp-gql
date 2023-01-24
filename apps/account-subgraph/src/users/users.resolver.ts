@@ -1,4 +1,10 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Query,
+  Resolver,
+  ResolveReference,
+} from '@nestjs/graphql';
 import { User } from './entities/user.entity';
 import { MikroCommonService, createBaseResolver } from '@lib/mikro-orm-pg';
 import { UserRepository } from './user.repository';
@@ -15,7 +21,10 @@ export class UsersResolver extends UsersBaseResolver {
   ) {
     super(commonService, userRepository);
   }
-
+  @Query(() => String)
+  service() {
+    return 'UsersResolver';
+  }
   @Mutation(() => CreateUserOutput)
   async createUser(
     @Args('input') createUserInput: CreateUserInput,
@@ -29,12 +38,18 @@ export class UsersResolver extends UsersBaseResolver {
         ok: true,
       };
     } catch (error) {
-      console.error(error);
       winstonLogger?.error(error.message);
       return {
         ok: false,
         error: error.message,
       };
     }
+  }
+  @ResolveReference()
+  async resolveReference(reference: { __typename: string; id: string }) {
+    console.log({ reference });
+    return this.userRepository.findOne({
+      id: reference.id,
+    });
   }
 }

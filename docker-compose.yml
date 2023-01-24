@@ -30,7 +30,7 @@ services:
     #   - pgadmin-data:/var/lib/pgadmin
   redis:
     container_name: redisdb
-    image: 'redis:latest'
+    image: 'redis/redis-stack-server:latest'
     ports:
       - '6379:6379'
     environment:

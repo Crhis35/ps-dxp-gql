@@ -64,6 +64,7 @@ type RelayPaginatedUserResponse {
 
 type Query {
   listAllUsers(input: SearchInput!): RelayPaginatedUserResponse
+  service: String!
 }
 
 input SearchInput {

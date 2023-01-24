@@ -1,3 +1,4 @@
+import { winstonLogger } from '@lib/common';
 import {
   InjectRedisPubSubService,
   RedisPubSubService,
@@ -10,32 +11,48 @@ import {
   CreateNotificationOutput,
 } from './dto/create-notification.dto';
 import {
-  Notification,
+  INotification,
   notificationSchema,
 } from './entities/notification.entity';
 
 @Injectable()
 export class NotificationsService implements OnModuleInit {
-  private notificationRepository: Repository<Notification>;
+  private notificationRepository: Repository<INotification>;
 
   constructor(
     @InjectRedisPubSubService()
     private readonly pubSub: RedisPubSubService,
     @InjectRedisOmService()
     private redisClient: RedisOmService,
-  ) {
-    console.log(redisClient);
-  }
+  ) {}
 
   async create(
     input: CreateNotificationInput,
   ): Promise<CreateNotificationOutput> {
     try {
-      this.notificationRepository.createAndSave({});
+      winstonLogger?.info(`Create user ${JSON.stringify(input)}`);
+
+      const newItem = await this.notificationRepository.createAndSave({
+        ...input,
+      });
+
+      this.pubSub.publish('CREATED', ['Notification'], {
+        onCreateNotification: { value: 'Elegantly' },
+      });
+
       return {
         ok: true,
+        item: {
+          id: newItem.entityId,
+          ownerId: newItem.ownerId,
+          owner: {
+            id: newItem.ownerId,
+          },
+        },
       };
     } catch (error) {
+      winstonLogger?.error(`Creating user:  ${error.message}`);
+
       return {
         ok: false,
         error: error.message,
@@ -46,11 +63,17 @@ export class NotificationsService implements OnModuleInit {
   onCreateNotification() {
     return this.pubSub.iterator('CREATED', ['Notification']);
   }
-
+  async list() {
+    const items = await this.notificationRepository.search().all();
+    console.log({ items });
+    return items.map((item) => ({
+      id: item.entityId,
+      ownerId: item.ownerId,
+    }));
+  }
   public async onModuleInit() {
     this.notificationRepository =
       this.redisClient.client.fetchRepository(notificationSchema);
-
-    //    await this.notificationRepository.createIndex();
+    await this.notificationRepository.createIndex();
   }
 }

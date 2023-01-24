@@ -4,14 +4,22 @@ import { User } from './user.entity';
 
 @ObjectType()
 @Directive('@key(fields: "id")')
-export class Notification extends Entity {
+export class Notification {
   @Field(() => ID)
   id: string;
 
   @Field(() => User)
-  owner: User;
+  owner?: User;
+
+  @Field(() => String)
+  ownerId: string;
 }
 
-export const notificationSchema = new Schema(Notification, {
-  owner: { type: 'string' },
+export class INotification extends Entity {
+  id: string;
+  ownerId: string;
+}
+
+export const notificationSchema = new Schema(INotification, {
+  ownerId: { type: 'string' },
 });

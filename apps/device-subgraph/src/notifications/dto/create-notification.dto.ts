@@ -3,7 +3,10 @@ import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { Notification } from '../entities/notification.entity';
 
 @InputType()
-export class CreateNotificationInput {}
+export class CreateNotificationInput {
+  @Field()
+  ownerId: string;
+}
 
 @ObjectType()
 export class CreateNotificationOutput extends CoreOutput {

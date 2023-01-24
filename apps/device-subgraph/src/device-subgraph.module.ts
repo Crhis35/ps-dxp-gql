@@ -17,6 +17,8 @@ import {
 import { GraphQLError } from 'graphql';
 import { RedisOmModule } from '@lib/redis-store';
 import { RedisOptions } from 'ioredis';
+import { User } from './notifications/entities/user.entity';
+import { Notification } from './notifications/entities/notification.entity';
 
 export const redisUrlToOptions = (url: string): RedisOptions => {
   if (url.includes('://:')) {
@@ -79,9 +81,12 @@ export const redisUrlToOptions = (url: string): RedisOptions => {
       subscription: {
         fullWsTransport: true,
       },
+      buildSchemaOptions: {
+        orphanedTypes: [Notification],
+      },
       autoSchemaFile: join(
         process.cwd(),
-        'apps/account-subgraph/src/schema.gql',
+        'apps/device-subgraph/src/schema.gql',
       ),
       ide: true,
       federationMetadata: true,
@@ -89,9 +94,11 @@ export const redisUrlToOptions = (url: string): RedisOptions => {
       errorFormatter: (error) => {
         const org = error.errors[0].originalError as HttpException;
         return {
-          statusCode: org.getStatus(),
+          statusCode: (org?.getStatus && org.getStatus()) ?? 400,
           response: {
-            errors: [org.getResponse() as GraphQLError],
+            errors: (org?.getResponse
+              ? [org.getResponse()]
+              : error.errors) as GraphQLError[],
             data: null,
           },
         };

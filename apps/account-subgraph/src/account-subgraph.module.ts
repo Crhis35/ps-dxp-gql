@@ -48,10 +48,13 @@ import { GraphQLError } from 'graphql';
       routes: true,
       errorFormatter: (error) => {
         const org = error.errors[0].originalError as HttpException;
+
         return {
-          statusCode: org.getStatus(),
+          statusCode: (org.getStatus && org.getStatus()) ?? 400,
           response: {
-            errors: [org.getResponse() as GraphQLError],
+            errors: (org.getResponse
+              ? [org.getResponse()]
+              : error.errors) as GraphQLError[],
             data: null,
           },
         };

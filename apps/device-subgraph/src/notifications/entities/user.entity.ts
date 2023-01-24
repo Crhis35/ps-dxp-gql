@@ -7,8 +7,8 @@ import { Notification } from './notification.entity';
 export class User {
   @Field(() => ID)
   @Directive('@external')
-  id: number;
+  id: string;
 
-  @Field(() => [Notification])
-  posts?: Notification[];
+  @Field(() => [Notification], { nullable: true })
+  notifications?: Notification[];
 }
