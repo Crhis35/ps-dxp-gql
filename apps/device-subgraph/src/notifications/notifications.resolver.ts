@@ -5,6 +5,8 @@ import {
   ResolveReference,
   Resolver,
   Subscription,
+  ResolveField,
+  Parent,
 } from '@nestjs/graphql';
 import {
   CreateNotificationInput,
@@ -24,21 +26,16 @@ export class NotificationsResolver {
     return this.notificationsService.create(createNotificationInput);
   }
 
-  @Query(() => [Notification], { nullable: true })
-  async listNotifications() {
-    return this.notificationsService.list();
-  }
-
-  @Query(() => String)
-  async NotificationsResolver() {
-    return 'NotificationsResolver';
-  }
-
   @Subscription(() => String, {
     resolve: ({ onCreateNotification: { value } }) => value,
   })
   onCreateNotification() {
     return this.notificationsService.onCreateNotification();
+  }
+
+  @ResolveField('owner')
+  owner(@Parent() notification: Notification) {
+    return { __typename: 'User', id: notification.ownerId };
   }
 
   @ResolveReference()

@@ -42,9 +42,9 @@ type Notification {
   ownerId: String!
 }
 
-type Query {
-  NotificationsResolver: String!
-  listNotifications: [Notification!]
+input NotificationPaginationInput {
+  count: Int!
+  offset: Int!
 }
 
 type Subscription {
@@ -53,7 +53,7 @@ type Subscription {
 
 type User {
   id: ID!
-  notifications: [Notification!]
+  notifications(input: NotificationPaginationInput!): [Notification!]
 }
 
 scalar link__Import

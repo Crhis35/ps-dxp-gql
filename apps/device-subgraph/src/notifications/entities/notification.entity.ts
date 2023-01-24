@@ -1,4 +1,5 @@
 import { Directive, Field, ID, ObjectType } from '@nestjs/graphql';
+import { Expose } from 'class-transformer';
 import { Entity, Schema } from 'redis-om';
 import { User } from './user.entity';
 
@@ -6,12 +7,14 @@ import { User } from './user.entity';
 @Directive('@key(fields: "id")')
 export class Notification {
   @Field(() => ID)
+  @Expose()
   id: string;
 
   @Field(() => User)
   owner?: User;
 
   @Field(() => String)
+  @Expose()
   ownerId: string;
 }
 

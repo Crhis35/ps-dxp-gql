@@ -14,6 +14,11 @@ import {
   INotification,
   notificationSchema,
 } from './entities/notification.entity';
+import { NotificationPaginationInput } from './dto/list-notification.dto';
+
+type PaginationNotificationInput = NotificationPaginationInput & {
+  ownerId: string;
+};
 
 @Injectable()
 export class NotificationsService implements OnModuleInit {
@@ -36,19 +41,18 @@ export class NotificationsService implements OnModuleInit {
         ...input,
       });
 
+      const item = {
+        id: newItem.entityId,
+        ownerId: newItem.ownerId,
+      };
+
       this.pubSub.publish('CREATED', ['Notification'], {
-        onCreateNotification: { value: 'Elegantly' },
+        onCreateNotification: { value: item },
       });
 
       return {
         ok: true,
-        item: {
-          id: newItem.entityId,
-          ownerId: newItem.ownerId,
-          owner: {
-            id: newItem.ownerId,
-          },
-        },
+        item,
       };
     } catch (error) {
       winstonLogger?.error(`Creating user:  ${error.message}`);
@@ -63,14 +67,23 @@ export class NotificationsService implements OnModuleInit {
   onCreateNotification() {
     return this.pubSub.iterator('CREATED', ['Notification']);
   }
-  async list() {
-    const items = await this.notificationRepository.search().all();
-    console.log({ items });
+
+  async listByUser(input: PaginationNotificationInput) {
+    const items = await this.notificationRepository
+      .search()
+      .where('ownerId')
+      .eq(input.ownerId)
+      .page(input.offset, input.count);
+
+    return this.parseNotification(items);
+  }
+  parseNotification(items: INotification[]) {
     return items.map((item) => ({
       id: item.entityId,
       ownerId: item.ownerId,
     }));
   }
+
   public async onModuleInit() {
     this.notificationRepository =
       this.redisClient.client.fetchRepository(notificationSchema);
