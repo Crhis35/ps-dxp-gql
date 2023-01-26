@@ -13,6 +13,7 @@ import {
 } from '@nestjs/mercurius';
 import { GraphQLError } from 'graphql';
 
+console.log(getServiceList());
 @Module({
   imports: [
     CommonModule,
@@ -37,6 +38,7 @@ import { GraphQLError } from 'graphql';
         services: getServiceList(),
         pollingInterval: 10000,
       },
+      sortSchema: true,
       subscription: {
         fullWsTransport: true,
       },

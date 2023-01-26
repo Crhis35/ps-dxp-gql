@@ -113,7 +113,7 @@ services:
       - device-subgraph
       - account-subgraph
     environment:
-      - SERVICE_LIST=http://device-subgraph:3001/graphql,devices|http://account-subgraph:3002/graphql,accounts|
+      - SERVICE_LIST=http://device-subgraph:3001/graphql;ws://device-subgraph:3001/graphql,devices|http://account-subgraph:3002/graphql,accounts|
       - PORT=4000
 
 networks:

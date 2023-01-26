@@ -48,7 +48,7 @@ input NotificationPaginationInput {
 }
 
 type Subscription {
-  onCreateNotification: String!
+  onCreateNotification: Notification!
 }
 
 type User {

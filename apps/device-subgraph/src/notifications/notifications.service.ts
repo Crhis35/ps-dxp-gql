@@ -65,6 +65,7 @@ export class NotificationsService implements OnModuleInit {
   }
 
   onCreateNotification() {
+    console.log(this.pubSub.iterator('CREATED', ['Notification']));
     return this.pubSub.iterator('CREATED', ['Notification']);
   }
 

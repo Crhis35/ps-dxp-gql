@@ -1,8 +1,12 @@
-const formatService = (serviceIdentifier: string) => {
-  const [url, name] = serviceIdentifier.split(',');
+import { MercuriusGatewayService } from 'mercurius';
+
+const formatService = (serviceIdentifier: string): MercuriusGatewayService => {
+  const [urls, name] = serviceIdentifier.split(',');
+  const [url, wsUrl] = urls.split(';');
   return {
     url,
     name,
+    wsUrl,
   };
 };
 
