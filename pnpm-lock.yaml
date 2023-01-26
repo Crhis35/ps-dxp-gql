@@ -28,7 +28,7 @@ specifiers:
   '@typescript-eslint/parser': ^5.0.0
   '@webundsoehne/nestjs-util': ^6.0.6
   cache-manager: ^5.1.4
-  cache-manager-ioredis: ^2.1.0
+  cache-manager-ioredis-yet: ^1.1.0
   class-transformer: ^0.5.1
   class-validator: ^0.14.0
   cross-env: ^7.0.3
@@ -40,11 +40,13 @@ specifiers:
   graphql-redis-subscriptions: ^2.6.0
   graphql-ws: ^5.11.2
   helmet: ^6.0.1
+  install: ^0.13.0
   ioredis: ^5.2.5
   jest: 29.3.1
   joi: ^17.7.0
   mercurius: ^11.5.0
   mqemitter-redis: ^5.0.0
+  pnpm: ^7.26.0
   prettier: ^2.3.2
   prom-client: ^14.1.1
   redis-om: ^0.3.6
@@ -79,7 +81,7 @@ dependencies:
   '@nestjs/terminus': 9.1.4_y2go4w4e4bq2ttiwoi4hwad4ru
   '@webundsoehne/nestjs-util': 6.0.6_wib3aspfuw32cij77zb2tch3se
   cache-manager: 5.1.4
-  cache-manager-ioredis: 2.1.0
+  cache-manager-ioredis-yet: 1.1.0
   class-transformer: 0.5.1
   class-validator: 0.14.0
   fastify: 4.12.0
@@ -87,10 +89,12 @@ dependencies:
   graphql-redis-subscriptions: 2.6.0
   graphql-ws: 5.11.2_graphql@16.6.0
   helmet: 6.0.1
+  install: 0.13.0
   ioredis: 5.2.5
   joi: 17.7.0
   mercurius: 11.5.0_graphql@16.6.0
   mqemitter-redis: 5.0.0
+  pnpm: 7.26.0
   prom-client: 14.1.1
   redis-om: 0.3.6
   reflect-metadata: 0.1.13
@@ -2804,11 +2808,12 @@ packages:
       - bluebird
     optional: true
 
-  /cache-manager-ioredis/2.1.0:
-    resolution: {integrity: sha512-TCxbp9ceuFveTKWuNaCX8QjoC41rAlHen4s63u9Yd+iXlw3efYmimc/u935PKPxSdhkXpnMes4mxtK3/yb0L4g==}
-    engines: {node: '>=6.0.0'}
+  /cache-manager-ioredis-yet/1.1.0:
+    resolution: {integrity: sha512-bGBAq8oNzzNkO2dwlYGWBxNXrz4w8FUTpe3nfUydJ6bm1ixKEcSUKYksGokQMaRgqkQjMbIHWFkvb8p+V9ZKqw==}
+    engines: {node: '>= 16.17.0'}
     dependencies:
-      ioredis: 4.28.5
+      cache-manager: 5.1.4
+      ioredis: 5.2.5
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -3189,11 +3194,6 @@ packages:
 
   /delegates/1.0.0:
     resolution: {integrity: sha512-bd2L678uiWATM6m5Z1VzNCErI3jiGzt6HGY8OVICs40JQq/HALfbyNJmp0UDakEY4pMMaN0Ly5om/B1VI/+xfQ==}
-
-  /denque/1.5.1:
-    resolution: {integrity: sha512-XwE+iZ4D6ZUB7mfYRMb5wByE8L74HCn30FBN7sWnXksWc1LO1bPDl67pBR9o/kC4z/xSNAwkMYcGgqDV3BE3Hw==}
-    engines: {node: '>=0.10'}
-    dev: false
 
   /denque/2.1.0:
     resolution: {integrity: sha512-HVQE3AAb/pxF8fQAoiqpvg9i3evqug3hoiwakOyZAwJm+6vZehbkYXZ0l4JxS+I3QxM97v5aaRNhj8v5oBhekw==}
@@ -4305,6 +4305,11 @@ packages:
       wrap-ansi: 7.0.0
     dev: true
 
+  /install/0.13.0:
+    resolution: {integrity: sha512-zDml/jzr2PKU9I8J/xyZBQn8rPCAY//UOYNmR01XwNwyfhEWObo2SWfSl1+0tm1u6PhxLwDnfsT/6jB7OUxqFA==}
+    engines: {node: '>= 0.10'}
+    dev: false
+
   /int64-buffer/0.1.10:
     resolution: {integrity: sha512-v7cSY1J8ydZ0GyjUHqF+1bshJ6cnEVLo9EnjB8p+4HDRPZc9N5jjmvUV7NvEsqQOKyH0pmIBFWXVQbiS0+OBbA==}
     dev: false
@@ -4322,25 +4327,6 @@ packages:
     resolution: {integrity: sha512-Axp07oVqbUAArCuIjlfXfME0/te/R7x43zfeGEpY1UTJjWdTUIw/h+K/LfIkRGCv8aCB4bCypHft8AQZ+1Z7zw==}
     dependencies:
       to-fast-properties: 3.0.1
-    dev: false
-
-  /ioredis/4.28.5:
-    resolution: {integrity: sha512-3GYo0GJtLqgNXj4YhrisLaNNvWSNwSS2wS4OELGfGxH8I69+XfNdnmV1AyN+ZqMh0i7eX+SWjrwFKDBDgfBC1A==}
-    engines: {node: '>=6'}
-    dependencies:
-      cluster-key-slot: 1.1.2
-      debug: 4.3.4
-      denque: 1.5.1
-      lodash.defaults: 4.2.0
-      lodash.flatten: 4.4.0
-      lodash.isarguments: 3.1.0
-      p-map: 2.1.0
-      redis-commands: 1.7.0
-      redis-errors: 1.2.0
-      redis-parser: 3.0.0
-      standard-as-callback: 2.1.0
-    transitivePeerDependencies:
-      - supports-color
     dev: false
 
   /ioredis/5.2.5:
@@ -5204,10 +5190,6 @@ packages:
     resolution: {integrity: sha512-qjxPLHd3r5DnsdGacqOMU6pb/avJzdh9tFX2ymgoZE27BmjXrNy/y4LoaiTeAb+O3gL8AfpJGtqfX/ae2leYYQ==}
     dev: false
 
-  /lodash.flatten/4.4.0:
-    resolution: {integrity: sha512-C5N2Z3DgnnKr0LOpv/hKCgKdb7ZZwafIrsesve6lmzvZIRZRGaZ/l6Q8+2W7NaT+ZwO3fFlSCzCzrDCFdJfZ4g==}
-    dev: false
-
   /lodash.isarguments/3.1.0:
     resolution: {integrity: sha512-chi4NHZlZqZD18a0imDHnZPrDeBbTtVN7GXMwuGdRH9qotxAjYs3aVLKc7zNOG9eddR5Ksd8rvFEBc9SsggPpg==}
     dev: false
@@ -5760,11 +5742,6 @@ packages:
       p-limit: 3.1.0
     dev: true
 
-  /p-map/2.1.0:
-    resolution: {integrity: sha512-y3b8Kpd8OAN444hxfBbFfj1FY/RjtTd8tzYwhUqNYXx0fXx2iX4maP4Qr6qhIKbQXI02wTLAda4fYUbDagTUFw==}
-    engines: {node: '>=6'}
-    dev: false
-
   /p-map/4.0.0:
     resolution: {integrity: sha512-/bjOqmgETBYB5BoEeGVea8dmvHb2m9GLy1E9W43yeyfP6QQCZGFNa+XRceJEuDB6zqr+gKpIAmlLebMpykw/MQ==}
     engines: {node: '>=10'}
@@ -5934,6 +5911,12 @@ packages:
     resolution: {integrity: sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==}
     engines: {node: '>=4'}
     dev: true
+
+  /pnpm/7.26.0:
+    resolution: {integrity: sha512-ASNhFsTa9YpJoalnGa28IKMimZk/oBOt19oxvB6+iP2EVr1h+PYcsTty4mrgSE/LegWQPy4yphZinshKjxycOA==}
+    engines: {node: '>=14.6'}
+    hasBin: true
+    dev: false
 
   /postgres-array/2.0.0:
     resolution: {integrity: sha512-VpZrUqU5A69eQyW2c5CA1jtLecCsN2U/bD6VilrFDWq5+5UIEVO7nazS3TEcHf1zuPYO/sqGvUvW62g86RXZuA==}
@@ -6124,10 +6107,6 @@ packages:
     engines: {node: '>= 10.13.0'}
     dependencies:
       resolve: 1.22.1
-
-  /redis-commands/1.7.0:
-    resolution: {integrity: sha512-nJWqw3bTFy21hX/CPKHth6sfhZbdiHP6bTawSgQBlKOVRG7EZkfHbbHwQJnrE4vsQf0CMNE+3gJ4Fmm16vdVlQ==}
-    dev: false
 
   /redis-errors/1.2.0:
     resolution: {integrity: sha512-1qny3OExCf0UvUV/5wpYKf2YwPcOqXzkwKKSmKHiE6ZMQs5heeE/c8eXK+PNllPvmjgAbfnsbpkGZWy8cBpn9w==}

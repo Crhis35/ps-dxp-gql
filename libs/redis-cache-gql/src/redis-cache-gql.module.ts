@@ -1,21 +1,18 @@
-import type {
-  DynamicModule,
-  CacheModuleOptions,
-  CacheStore,
-} from '@nestjs/common';
+import type { DynamicModule, CacheModuleOptions } from '@nestjs/common';
 import { CacheModule, CACHE_MANAGER, Global, Module } from '@nestjs/common';
 import type { RedisCacheManagerOptions } from './redis-cache-gql.interface';
 import { ConfigService } from '@webundsoehne/nestjs-util/dist/provider/config/config.service';
-import * as redisStore from 'cache-manager-ioredis';
 import { RedisCacheGQLInterceptor } from './redis-cache-gql.interceptor';
+import { redisUrlToOptions } from '@lib/common';
+import { ioredisStore } from './stores/ioredis.store';
 
 @Global()
 @Module({
   providers: [RedisCacheGQLInterceptor],
   imports: [
     CacheModule.register({
-      ...ConfigService.get<CacheModuleOptions>('redisCacheManager'),
-      // store: redisStore as unknown as CacheStore,
+      ...redisUrlToOptions(process.env.REDIS_URL),
+      store: ioredisStore,
     }),
   ],
   exports: [CacheModule],
@@ -33,7 +30,7 @@ export class RedisCacheGqlModule {
               ...(options?.options ?? {
                 ...ConfigService.get<CacheModuleOptions>('redisCacheManager'),
               }),
-              //              store: redisStore as unknown as CacheStore,
+              store: ioredisStore,
             }),
         },
       ],

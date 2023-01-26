@@ -1,48 +1,22 @@
 import { CommonModule } from '@lib/common';
 
-import { CacheModule, HttpException, Module } from '@nestjs/common';
+import { HttpException, Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { DeviceSubgraphController } from './device-subgraph.controller';
 import { DeviceSubgraphService } from './device-subgraph.service';
 import * as Joi from 'joi';
 import { ConfigModule } from '@nestjs/config';
-import { RedisPubsubModule, RedisPubSubService } from '@lib/redis-pubsub';
+import { RedisPubsubModule } from '@lib/redis-pubsub';
 import { NotificationsModule } from './notifications/notifications.module';
-import { RedisCacheGqlModule } from '@lib/redis-cache-gql';
+
 import {
   MercuriusFederationDriver,
   MercuriusFederationDriverConfig,
 } from '@nestjs/mercurius';
 import { GraphQLError } from 'graphql';
 import { RedisOmModule } from '@lib/redis-store';
-import { RedisOptions } from 'ioredis';
-import { User } from './notifications/entities/user.entity';
 import { Notification } from './notifications/entities/notification.entity';
-
-export const redisUrlToOptions = (url: string): RedisOptions => {
-  if (url.includes('://:')) {
-    const arr = url.split('://:')[1].split('@');
-    const secondArr = arr[1].split(':');
-
-    return {
-      password: arr[0],
-      host: secondArr[0],
-      port: parseInt(secondArr[1], 10),
-    };
-  }
-
-  const connectionString = url.split('://')[1];
-  const arr = connectionString.split(':');
-  console.log({
-    host: arr[0],
-    port: parseInt(arr[1], 10),
-  });
-  return {
-    host: arr[0],
-    port: parseInt(arr[1], 10),
-  };
-};
 
 @Module({
   imports: [
@@ -68,12 +42,7 @@ export const redisUrlToOptions = (url: string): RedisOptions => {
       global: true,
       url: process.env.REDIS_URL,
     }),
-    RedisCacheGqlModule.forRoot({
-      global: true,
-      options: {
-        ...redisUrlToOptions(process.env.REDIS_URL),
-      } as any,
-    }),
+
     GraphQLModule.forRoot<MercuriusFederationDriverConfig>({
       driver: MercuriusFederationDriver,
       graphiql: process.env.NODE_ENV !== 'production',
@@ -104,6 +73,7 @@ export const redisUrlToOptions = (url: string): RedisOptions => {
         };
       },
     }),
+
     NotificationsModule,
   ],
   controllers: [DeviceSubgraphController],

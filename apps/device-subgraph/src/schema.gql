@@ -47,6 +47,10 @@ input NotificationPaginationInput {
   offset: Int!
 }
 
+type Query {
+  notification: String!
+}
+
 type Subscription {
   onCreateNotification: Notification!
 }

@@ -29,7 +29,10 @@ export class NotificationsService implements OnModuleInit {
     private readonly pubSub: RedisPubSubService,
     @InjectRedisOmService()
     private redisClient: RedisOmService,
-  ) {}
+  ) {
+    this.notificationRepository =
+      this.redisClient.client.fetchRepository(notificationSchema);
+  }
 
   async create(
     input: CreateNotificationInput,
@@ -86,8 +89,6 @@ export class NotificationsService implements OnModuleInit {
   }
 
   public async onModuleInit() {
-    this.notificationRepository =
-      this.redisClient.client.fetchRepository(notificationSchema);
     await this.notificationRepository.createIndex();
   }
 }

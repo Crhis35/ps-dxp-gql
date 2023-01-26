@@ -2,7 +2,7 @@ import * as Joi from 'joi';
 
 import { join } from 'path';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { HttpException, Module } from '@nestjs/common';
+import { CacheModule, HttpException, Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 
 import { AccountSubgraphController } from './account-subgraph.controller';
@@ -18,7 +18,8 @@ import {
   MercuriusFederationDriverConfig,
 } from '@nestjs/mercurius';
 import { GraphQLError } from 'graphql';
-
+import { CacheConfig, RedisCacheGQLInterceptor } from '@lib/redis-cache-gql';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 @Module({
   imports: [
     CommonModule,
@@ -61,9 +62,20 @@ import { GraphQLError } from 'graphql';
       },
     }),
     MikroCommonModule,
+    CacheModule.registerAsync({
+      isGlobal: true,
+      imports: [ConfigModule],
+      useClass: CacheConfig,
+    }),
     UsersModule,
   ],
   controllers: [AccountSubgraphController],
-  providers: [AccountSubgraphService],
+  providers: [
+    AccountSubgraphService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: RedisCacheGQLInterceptor,
+    },
+  ],
 })
 export class AccountSubgraphModule {}

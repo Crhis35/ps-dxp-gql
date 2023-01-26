@@ -13,7 +13,6 @@ import {
 } from '@nestjs/mercurius';
 import { GraphQLError } from 'graphql';
 
-console.log(getServiceList());
 @Module({
   imports: [
     CommonModule,

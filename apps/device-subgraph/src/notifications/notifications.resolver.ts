@@ -26,6 +26,11 @@ export class NotificationsResolver {
     return this.notificationsService.create(createNotificationInput);
   }
 
+  @Query(() => String)
+  notification() {
+    return 'Notification Quey';
+  }
+
   @Subscription(() => Notification, {
     resolve: ({ onCreateNotification: { value } }) => value,
   })

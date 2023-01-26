@@ -24,7 +24,6 @@ export class RedisCacheGQLInterceptor implements NestInterceptor {
   ): Promise<Observable<any>> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/naming-convention
     const [_u, args, _s, field] = context.getArgs();
-
     const ttl = this.reflector.get<number>(
       CACHE_TTL_METADATA,
       context.getHandler(),

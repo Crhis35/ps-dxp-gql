@@ -72,6 +72,7 @@ services:
       REDIS_URL: redis://redis:6379
       PORT: 3002
       DATABASE_URL: postgres://admin:admin@postgres:5432/ps-dxp-development
+      API_TITLE: account-subgraph
 
   device-subgraph:
     container_name: device-subgraph-api
@@ -92,6 +93,8 @@ services:
     environment:
       REDIS_URL: redis://redis:6379
       PORT: 3001
+      API_TITLE: device-subgraph
+
   gateway:
     container_name: gateway-api
     volumes:
@@ -101,12 +104,13 @@ services:
       context: ./
       dockerfile: ./apps/gateway/Dockerfile
       target: development
-    command: yarn start:dev
+    command: yarn start:dev gateway
     ports:
       - '4000:4000'
     depends_on:
       - device-subgraph
       - account-subgraph
+      - redis
     networks:
       - app-tier
     links:
@@ -115,6 +119,8 @@ services:
     environment:
       - SERVICE_LIST=http://device-subgraph:3001/graphql;ws://device-subgraph:3001/graphql,devices|http://account-subgraph:3002/graphql,accounts|
       - PORT=4000
+      - REDIS_URL=redis://redis:6379
+      - API_TITLE=gateway
 
 networks:
   app-tier:
