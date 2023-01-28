@@ -12,7 +12,7 @@ export function createBaseResolver<T extends CoreEntity, K extends Type<T>>(
   objectTypeCls: K,
 ) {
   @ObjectType(`RelayPaginated${objectTypeCls.name}Response`)
-  class Paginated extends RelayPaginated(objectTypeCls) {
+  class Paginated extends RelayPaginated<T>(objectTypeCls) {
     @Field({ nullable: true })
     error?: string;
 

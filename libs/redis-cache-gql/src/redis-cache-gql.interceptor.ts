@@ -8,6 +8,7 @@ import { tap } from 'rxjs/operators';
 import { InjectRedisCacheManager } from './inject/inject.decorator';
 import { REDIS_CACHE_MANAGER_DELIMITER } from './redis-cache-gql.constants';
 import { RedisCacheManagerProvider } from './redis-cache-gql.interface';
+const IgnoredPropertyName = Symbol('graphql');
 
 @Injectable()
 export class RedisCacheGQLInterceptor implements NestInterceptor {
@@ -22,7 +23,10 @@ export class RedisCacheGQLInterceptor implements NestInterceptor {
     context: GraphQLExecutionContext,
     next: CallHandler,
   ): Promise<Observable<any>> {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/naming-convention
+    const isIgnored = context.getHandler()[IgnoredPropertyName];
+    if (isIgnored) {
+      return next.handle();
+    } // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/naming-convention
     const [_u, args, _s, field] = context.getArgs();
     const ttl = this.reflector.get<number>(
       CACHE_TTL_METADATA,
