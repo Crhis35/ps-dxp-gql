@@ -8,7 +8,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { AccountSubgraphController } from './account-subgraph.controller';
 import { AccountSubgraphService } from './account-subgraph.service';
 import { UsersModule } from './users/users.module';
-import { CommonModule } from '@lib/common';
+import { CommonModule, loadApiConfiguration } from '@lib/common';
 import { ConfigModule } from '@nestjs/config';
 
 import config from './orm.config';
@@ -35,6 +35,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
         REDIS_URL: Joi.string().required(),
         DATABASE_URL: Joi.string().required(),
       }),
+      load: [loadApiConfiguration],
     }),
     MikroOrmModule.forRoot(config),
     GraphQLModule.forRoot<MercuriusFederationDriverConfig>({

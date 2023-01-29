@@ -12,6 +12,7 @@ export const loadApiConfiguration = (): BaseConfiguration => ({
 });
 
 export const redisUrlToOptions = (url: string): RedisOptions => {
+  if (!url) return;
   if (url.includes('://:')) {
     const arr = url.split('://:')[1].split('@');
     const secondArr = arr[1].split(':');

@@ -1,4 +1,4 @@
-import { CommonModule } from '@lib/common';
+import { CommonModule, loadApiConfiguration } from '@lib/common';
 
 import { HttpException, Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
@@ -32,6 +32,7 @@ import { Notification } from './notifications/entities/notification.entity';
         PORT: Joi.number(),
         REDIS_URL: Joi.string(),
       }),
+      load: [loadApiConfiguration],
     }),
     RedisPubsubModule.forRoot({
       options: {

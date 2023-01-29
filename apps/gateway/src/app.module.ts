@@ -6,7 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import * as Joi from 'joi';
 import { getServiceList } from './utils';
-import { CommonModule } from '@lib/common';
+import { CommonModule, loadApiConfiguration } from '@lib/common';
 import {
   MercuriusGatewayDriver,
   MercuriusGatewayDriverConfig,
@@ -27,6 +27,7 @@ import { GraphQLError } from 'graphql';
         SERVICE_LIST: Joi.string().required(),
         PORT: Joi.number(),
       }),
+      load: [loadApiConfiguration],
     }),
     GraphQLModule.forRoot<MercuriusGatewayDriverConfig>({
       driver: MercuriusGatewayDriver,
@@ -36,6 +37,7 @@ import { GraphQLError } from 'graphql';
       gateway: {
         services: getServiceList(),
         pollingInterval: 10000,
+        retryServicesInterval: 10000,
       },
       sortSchema: true,
       subscription: {
